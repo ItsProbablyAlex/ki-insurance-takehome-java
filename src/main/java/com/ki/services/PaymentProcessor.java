@@ -14,23 +14,33 @@ import java.util.List;
 import java.util.Map;
 
 public class PaymentProcessor {
+    // TODO: We could give a better interface to other modules by making methods in this class static.
+    // TODO: Overload getPayments to give
     public Payment[] getPayments(String csvPath, String source) {
+        // Create a map of provided sources to Payment Mapping strategies
         Map<String, PaymentMappingStrategy> mappingStrategies = new HashMap<String, PaymentMappingStrategy>(){{
             put("card", new CardPaymentMappingStrategy());
             put("bank", new BankPaymentMappingStrategy());
         }};
-        List<Payment> payments = new ArrayList<>();
+        // If a valid mapping strategy has been provided use the overload
         if (mappingStrategies.containsKey(source)) {
-            try {
-                FileReader reader = new FileReader(csvPath);
-                PaymentMappingStrategy strategy = mappingStrategies.get(source);
-                payments = new CsvToBeanBuilder<Payment>(reader)
-                        .withMappingStrategy(strategy)
-                        .build()
-                        .parse();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return getPayments(csvPath, mappingStrategies.get(source));
+        }
+        // Else return an empty array
+        // TODO: we could alternatively silently fail when an invalid payment method is provided
+        return new Payment[]{};
+    }
+
+    public Payment[] getPayments(String csvPath, PaymentMappingStrategy strategy) {
+        List<Payment> payments = new ArrayList<>();
+        try {
+            FileReader reader = new FileReader(csvPath);
+            payments = new CsvToBeanBuilder<Payment>(reader)
+                    .withMappingStrategy(strategy)
+                    .build()
+                    .parse();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return payments.toArray(new Payment[]{});
     }
