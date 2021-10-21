@@ -3,7 +3,6 @@ package com.ki.mappings;
 import com.ki.models.Payment;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.HeaderNameBaseMappingStrategy;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
@@ -15,7 +14,7 @@ public class PaymentMappingStrategy extends HeaderNameBaseMappingStrategy<Paymen
     }
 
     @Override
-    public void captureHeader(CSVReader reader) throws IOException, CsvRequiredFieldEmptyException {
+    public void captureHeader(CSVReader reader) throws IOException {
         if (this.type == null) {
             throw new IllegalStateException(ResourceBundle.getBundle("opencsv", this.errorLocale).getString("type.unset"));
         } else {
