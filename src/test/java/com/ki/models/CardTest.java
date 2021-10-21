@@ -82,4 +82,30 @@ public class CardTest {
         // Then status will have been updated
         assertEquals(expectedStatus, sut.getStatus());
     }
+
+    @Test
+    public void equalsReturnsTrueWhenSameObject() {
+        // When I compare the object to itself
+        Boolean expected = sut.equals(sut);
+        // Then I expect the result to be true
+        assertTrue(expected);
+    }
+
+    @Test
+    public void equalsReturnsFalseWhenNull() {
+        // When I compare the object to null
+        Boolean expected = sut.equals(null);
+        // Then I expect the result to be true
+        assertFalse(expected);
+    }
+
+    @Test
+    public void equalsReturnsTrueOnPropertyEquality(){
+        // Given an identical Card
+        Card card = new Card(MOCK_CARD_ID, MOCK_CARD_STATUS);
+        // When I compare the object to another with deep equality
+        Boolean expected = sut.equals(card);
+        // Then I expect the result to be true
+        assertTrue(expected);
+    }
 }

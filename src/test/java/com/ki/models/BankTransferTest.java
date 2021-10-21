@@ -40,4 +40,30 @@ public class BankTransferTest {
         // Then the accountId will have been updated
         assertEquals(expectedAccountId, sut.getAccountId());
     }
+
+    @Test
+    public void equalsReturnsTrueWhenSameObject() {
+        // When I compare the object to itself
+        Boolean expected = sut.equals(sut);
+        // Then I expect the result to be true
+        assertTrue(expected);
+    }
+
+    @Test
+    public void equalsReturnsFalseWhenNull() {
+        // When I compare the object to null
+        Boolean expected = sut.equals(null);
+        // Then I expect the result to be true
+        assertFalse(expected);
+    }
+
+    @Test
+    public void equalsReturnsTrueOnPropertyEquality(){
+        // Given an identical Card
+        BankTransfer bankTransfer = new BankTransfer(MOCK_ACCOUNT_ID);
+        // When I compare the object to another with deep equality
+        Boolean expected = sut.equals(bankTransfer);
+        // Then I expect the result to be true
+        assertTrue(expected);
+    }
 }

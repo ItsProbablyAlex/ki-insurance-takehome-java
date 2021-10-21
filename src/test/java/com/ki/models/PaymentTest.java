@@ -135,4 +135,30 @@ public class PaymentTest {
         // Then the payment date will have been updated
         assertEquals(expectedPaymentMethod, sut.getPaymentMethod());
     }
+
+    @Test
+    public void equalsReturnsTrueWhenSameObject() {
+        // When I compare the object to itself
+        Boolean expected = sut.equals(sut);
+        // Then I expect the result to be true
+        assertTrue(expected);
+    }
+
+    @Test
+    public void equalsReturnsFalseWhenNull() {
+        // When I compare the object to null
+        Boolean expected = sut.equals(null);
+        // Then I expect the result to be true
+        assertFalse(expected);
+    }
+
+    @Test
+    public void equalsReturnsTrueOnPropertyEquality(){
+        // Given an identical Card
+        Payment payment = new Payment(MOCK_CUSTOMER_ID, MOCK_DATE, MOCK_AMOUNT, mockPaymentMethod);
+        // When I compare the object to another with deep equality
+        Boolean expected = sut.equals(payment);
+        // Then I expect the result to be true
+        assertTrue(expected);
+    }
 }
