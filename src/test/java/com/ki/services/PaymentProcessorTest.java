@@ -59,6 +59,18 @@ public class PaymentProcessorTest {
     }
 
     @Test
+    public void testGetPaymentsSourceUnrecognised() {
+        // Given a source file containing no payments
+        String fixturePath = Fixture.getPath("bank_payments.csv");
+        // And a payment processor
+        PaymentProcessor sut = new PaymentProcessor();
+        // When I call get payments
+        Payment[] payments = sut.getPayments(fixturePath, "unknown payment method");
+        // Then I expect an empty list of payments to be returned
+        assertEquals(0, payments.length);
+    }
+
+    @Test
     public void testVerifyPayments() {
         // Given a list of payments
         Payment mockPayment1 = createPayment(true);
