@@ -28,9 +28,10 @@ public class ShareEngine {
                 totalShares += shares;
             }
 
-            ShareOrder shareOrder = new ShareOrder();
-            shareOrder.setCustomerId(Integer.parseInt(customerId));
-            shareOrder.setShares(totalShares);
+            ShareOrder shareOrder = new ShareOrder(
+                    Integer.parseInt(customerId),
+                    totalShares
+            );
             shareOrders.add(shareOrder);
 
         }
