@@ -141,6 +141,7 @@ public class PaymentTest {
         // When I compare the object to itself
         Boolean expected = sut.equals(sut);
         // Then I expect the result to be true
+        //noinspection ConstantConditions
         assertTrue(expected);
     }
 
@@ -149,6 +150,7 @@ public class PaymentTest {
         // When I compare the object to null
         Boolean expected = sut.equals(null);
         // Then I expect the result to be true
+        //noinspection ConstantConditions
         assertFalse(expected);
     }
 
