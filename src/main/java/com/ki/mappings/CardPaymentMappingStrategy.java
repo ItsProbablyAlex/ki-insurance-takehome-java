@@ -3,15 +3,10 @@ package com.ki.mappings;
 import com.ki.models.Card;
 import com.ki.models.Payment;
 import com.ki.models.PaymentMethod;
-import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvBeanIntrospectionException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.opencsv.exceptions.CsvValidationException;
-import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ResourceBundle;
 
 public class CardPaymentMappingStrategy extends PaymentMappingStrategy {
     @Override
