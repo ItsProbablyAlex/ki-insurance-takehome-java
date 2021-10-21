@@ -28,5 +28,18 @@ public class Card implements PaymentMethod {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Card c = (Card) obj;
+        return cardId == c.cardId &&
+                status.equals(c.status);
+    }
 }
 

@@ -68,4 +68,21 @@ public class Payment {
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Payment p = (Payment) obj;
+        return customerId == p.customerId &&
+                date.isEqual(p.date) &&
+                amount == p.amount &&
+                fee == p.fee &&
+                paymentMethod.equals(p.paymentMethod);
+
+    }
 }
