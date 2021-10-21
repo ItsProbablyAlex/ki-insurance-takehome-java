@@ -7,34 +7,26 @@ import java.time.LocalDate;
 
 
 public class Payment {
+    private final static BigDecimal FEE_RATE = Config.getPaymentFeeRate();
 
     private int customerId;
     private LocalDate date;
     private int amount;
     private int fee;
-    public Card card;
+    public PaymentMethod paymentMethod;
 
-    public Payment() {
-    }
-
-    public Payment(String[] data) {
-        this.setCustomerId(Integer.parseInt(data[0]));
-
-        BigDecimal paymentFeeRate = Config.getPaymentFeeRate();
-        int totalAmount = Integer.parseInt(data[2]);
-        this.setFee(paymentFeeRate.multiply(new BigDecimal(totalAmount)).intValue());
-        this.setAmount(totalAmount - this.getFee());
-        this.setDate(LocalDate.parse(data[1]));
-
-        Card card = new Card();
-        card.setCardId(Integer.parseInt(data[3]));
-        card.setStatus(data[4]);
-
-        this.card = card;
+    public Payment(int customerId, LocalDate date, int totalAmount,
+                   PaymentMethod paymentMethod
+    ) {
+        this.customerId = customerId;
+        this.date = date;
+        this.fee = FEE_RATE.multiply(new BigDecimal(totalAmount)).intValue();
+        this.amount = totalAmount - this.fee;
+        this.paymentMethod = paymentMethod;
     }
 
     public boolean isSuccessful() {
-        return card.getStatus().equals("processed");
+        return paymentMethod.isSuccessful();
     }
 
     public int getCustomerId() {
@@ -67,5 +59,13 @@ public class Payment {
 
     public void setFee(int fee) {
         this.fee = fee;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }
