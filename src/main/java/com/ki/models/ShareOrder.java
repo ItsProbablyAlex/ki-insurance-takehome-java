@@ -4,6 +4,11 @@ public class ShareOrder {
     private int customerId;
     private int shares;
 
+    public ShareOrder(int customerId, int shares) {
+        this.customerId = customerId;
+        this.shares = shares;
+    }
+
     public int getCustomerId() {
         return customerId;
     }
