@@ -3,28 +3,27 @@ package com.ki.mappings;
 import com.ki.models.Card;
 import com.ki.models.Payment;
 import com.ki.models.PaymentMethod;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvBeanIntrospectionException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.opencsv.exceptions.CsvValidationException;
+import org.apache.commons.lang3.ArrayUtils;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ResourceBundle;
 
-public class CardPaymentMappingStrategy extends ColumnPositionMappingStrategy<Payment> {
-    public CardPaymentMappingStrategy() {
-        setType(Payment.class);
-    }
-
+public class CardPaymentMappingStrategy extends PaymentMappingStrategy {
     @Override
     public Payment populateNewBean(String[] line) throws CsvBeanIntrospectionException, CsvValidationException {
-        String[] headers = super.getColumnMapping();
-        if (headers.length != 5) {
+        if (this.headerIndex.findMaxIndex() != 4) {
             throw new CsvValidationException();
         }
-        if (!(headers[0].equals("customer_id") &&
-                headers[1].equals("date") &&
-                headers[2].equals("amount") &&
-                headers[3].equals("card_id") &&
-                headers[4].equals("card_status"))) {
+        if (!(this.headerIndex.getByPosition(0).equals("customer_id") &&
+                this.headerIndex.getByPosition(1).equals("date") &&
+                this.headerIndex.getByPosition(2).equals("amount") &&
+                this.headerIndex.getByPosition(3).equals("card_id") &&
+                this.headerIndex.getByPosition(4).equals("card_status"))) {
             throw new CsvValidationException();
         }
         int customerId = Integer.parseInt(line[0]);

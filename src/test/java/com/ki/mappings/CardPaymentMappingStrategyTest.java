@@ -1,20 +1,24 @@
 package com.ki.mappings;
 
+import com.ki.Fixture;
 import com.ki.models.Card;
 import com.ki.models.Payment;
 import com.ki.models.PaymentMethod;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.opencsv.exceptions.CsvValidationException;
 import org.junit.Test;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 
 import static org.junit.Assert.*;
 
 public class CardPaymentMappingStrategyTest {
-    private static final String CARD_HEADER_DEFINITION[] = new String[] {
-            "customer_id", "date", "amount", "card_id", "card_status" };
-    private static final String BANK_HEADER_DEFINITION[] = new String[] {
-            "customer_id", "date", "amount", "bank_account_id" };
+
+    private static final String CARD_FIXTURE_PATH = Fixture.getPath("card_payments_empty.csv");
+    private static final String BANK_FIXTURE_PATH = Fixture.getPath("bank_payments_empty.csv");
 
     private static String MOCK_ID = "123";
     private static String MOCK_DATE = "2019-01-12";
@@ -23,12 +27,14 @@ public class CardPaymentMappingStrategyTest {
     private static String MOCK_CARD_STATUS = "processed";
 
     @Test
-    public void populateNewBeanWhenSourceCard() throws CsvValidationException {
-        // Given a list of strings (from a csv)
+    public void testPopulateNewBeanWhenValid() throws CsvValidationException, CsvRequiredFieldEmptyException, IOException {
+        // Given a set of source headers
+        CSVReader reader = new CSVReader(new FileReader(CARD_FIXTURE_PATH));
+        // Given a line from a csv
         String[] csvLine = {MOCK_ID, MOCK_DATE, MOCK_AMOUNT, MOCK_CARD_ID, MOCK_CARD_STATUS};
         // And a PaymentMappingStrategy
         CardPaymentMappingStrategy sut = new CardPaymentMappingStrategy();
-        sut.setColumnMapping(CARD_HEADER_DEFINITION);
+        sut.captureHeader(reader);
         // When I call populateNewBean
         Payment actual = sut.populateNewBean(csvLine);
         // Then I expect a returned payment like
@@ -43,24 +49,28 @@ public class CardPaymentMappingStrategyTest {
     }
 
     @Test(expected = CsvValidationException.class)
-    public void populateNewBeanWhenSourceCardMismatchNumColumns() throws CsvValidationException {
-        // Given a list of strings (from a csv)
-        String[] csvLine = {MOCK_ID, MOCK_DATE, MOCK_AMOUNT, MOCK_CARD_ID, MOCK_CARD_STATUS};
+    public void testPopulateNewBeanWhenMismatchNumColumns() throws CsvValidationException, IOException, CsvRequiredFieldEmptyException {
+        // Given a set of source headers
+        CSVReader reader = new CSVReader(new FileReader(BANK_FIXTURE_PATH));
+        // And a line from a csv
+        String[] csvLine = {MOCK_ID, MOCK_DATE, MOCK_AMOUNT, MOCK_CARD_ID, MOCK_CARD_STATUS, "Another Column"};
         // And a PaymentMappingStrategy
         CardPaymentMappingStrategy sut = new CardPaymentMappingStrategy();
-        sut.setColumnMapping(BANK_HEADER_DEFINITION);
+        sut.captureHeader(reader);
         // When I call populateNewBean
         sut.populateNewBean(csvLine);
         // Then I expect an exception to be thrown (implicit)
     }
 
     @Test(expected = CsvValidationException.class)
-    public void populateNewBeanWhenSourceBankMismatchHeaders() throws CsvValidationException {
-        // Given a list of strings (from a csv)
+    public void testPopulateNewBeanWhenMismatchHeaders() throws CsvValidationException, IOException, CsvRequiredFieldEmptyException {
+        // Given a set of source headers
+        CSVReader reader = new CSVReader(new FileReader(BANK_FIXTURE_PATH));
+        // And a line from a csv
         String[] csvLine = {MOCK_ID, MOCK_DATE, MOCK_AMOUNT, MOCK_CARD_ID, MOCK_CARD_STATUS};
         // And a PaymentMappingStrategy
-        BankPaymentMappingStrategy sut = new BankPaymentMappingStrategy();
-        sut.setColumnMapping("customer_id", "date", "amount", "card_id", "incorrect_column");
+        CardPaymentMappingStrategy sut = new CardPaymentMappingStrategy();
+        sut.captureHeader(reader);
         // When I call populateNewBean
         sut.populateNewBean(csvLine);
         // Then I expect an exception to be thrown (implicit)
